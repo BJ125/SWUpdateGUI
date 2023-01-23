@@ -1,0 +1,8 @@
+VERSION = "1.0"
+APP_ID = "Recovery App"
+LOGO = ""
+THEME_COLOR = "orange"
+NETWORK_INTERFACES = eth0, eth1, br0
+MEDIAPATH = "/run/media/sda"
+KEYPAD_DEVICE = "/dev/input/keyboard0"
+

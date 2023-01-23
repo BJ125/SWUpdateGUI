@@ -1,0 +1,9 @@
+include:
+  - project: "vhip/linux/vhip-sw-devel-ci"
+    ref: main
+    file: "run-vhip6-pdm3-recovery-pipeline.yml"
+
+Format-check:
+    stage: clang-format-check
+    rules:
+      - when: never
