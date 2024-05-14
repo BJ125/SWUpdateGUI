@@ -21,6 +21,8 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
+
 
 /**
  * List of buttons for install-update, edit network-settings

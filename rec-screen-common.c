@@ -15,6 +15,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 
 const unsigned int HEADER_HEIGHT = 50;
 

@@ -20,6 +20,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
 
 /* This structure is for the area that displays list of network interfaces and their configuration.
    This is a Nx4 table, where N is number of network interfaces. Each row shows one network
