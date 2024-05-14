@@ -10,6 +10,7 @@
 #include "rec-util-system.h"
 
 #include <stdlib.h>
+#include <string.h>
 #include <linux/input.h>
 
 /**
