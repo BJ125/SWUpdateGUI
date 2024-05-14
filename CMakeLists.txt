@@ -20,7 +20,6 @@ set( THREADS_PREFER_PTHREAD_FLAG ON )
 find_package( Threads REQUIRED )
 
 find_library( LIB_LVGL NAMES lvgl )
-find_library( LIB_LV_DRIVERS NAMES lv_drivers )
 
 target_compile_options( ${PROJECT_NAME} PRIVATE
     -Wall
@@ -33,13 +32,11 @@ target_link_libraries( ${PROJECT_NAME} PRIVATE
     swupdate
     Threads::Threads
     ${LIB_LVGL}
-    ${LIB_LV_DRIVERS}
     rt
     )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SYSROOT}/usr/include/lvgl
-    ${CMAKE_SYSROOT}/usr/include/lvgl/lv_drivers
     )
 
 install( TARGETS ${PROJECT_NAME} RUNTIME DESTINATION

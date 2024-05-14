@@ -12,7 +12,6 @@ find_package( PkgConfig REQUIRED )
 pkg_check_modules( LIB_GTEST REQUIRED IMPORTED_TARGET gtest_main gmock)
 
 find_library( LIB_LVGL NAMES lvgl )
-find_library( LIB_LV_DRIVERS NAMES lv_drivers )
 
 
 file( GLOB REC_TEST_SOURCE_FILES "*.cpp" )
@@ -47,12 +46,10 @@ target_link_libraries( ${PROJECT_NAME} PRIVATE
     PkgConfig::LIB_GTEST
     Threads::Threads
     ${LIB_LVGL}
-    ${LIB_LV_DRIVERS}
     )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
     ${CMAKE_SYSROOT}/usr/include/lvgl
-    ${CMAKE_SYSROOT}/usr/include/lvgl/lv_drivers
     )
 
 target_compile_features( ${PROJECT_NAME} PRIVATE
