@@ -106,9 +106,12 @@ const uint8_t MouseCursorIconMap[] = {
 	0x00, 0x00, 0x00, 0x00
 };
 
-lv_img_dsc_t MouseCursorIcon = { .header.always_zero = 0,
-				 .header.w = 14,
-				 .header.h = 20,
-				 .data_size = 280 * LV_IMG_PX_SIZE_ALPHA_BYTE,
-				 .header.cf = LV_IMG_CF_TRUE_COLOR_ALPHA,
-				 .data = MouseCursorIconMap };
+lv_img_dsc_t MouseCursorIcon = {
+					.header.magic = LV_IMAGE_HEADER_MAGIC,
+					.header.cf = LV_COLOR_FORMAT_ARGB8888,
+					.header.flags = 0,
+					.header.w = 14,
+					.header.h = 20,
+					.header.stride = 0,
+					.data_size = 14 * 20 * 4, /* RGBA8888 pixels are 4 bytes */
+					.data = MouseCursorIconMap };
