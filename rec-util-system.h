@@ -25,7 +25,7 @@ struct EnvSettings {
 
 struct EnvSettings util_system_getEnvSettings(void);
 
-lv_disp_rot_t util_system_getRotationEnum(const unsigned int Angle);
+lv_display_rotation_t util_system_getRotationEnum(const unsigned int Angle);
 
 lv_key_t util_system_convertLinuxInputCodeToLvKey(const uint16_t InputCode);
 

@@ -76,17 +76,17 @@ TEST(UtilSystemTest, test_util_system_GetEnvSettings_0_in_resolution) {
 }
 
 TEST(UtilSystemTest, test_util_system_GetRotationEnum_valid) {
-  lv_disp_rot_t value = util_system_getRotationEnum(0);
-  EXPECT_EQ(value, LV_DISP_ROT_NONE);
+  lv_display_rotation_t value = util_system_getRotationEnum(0);
+  EXPECT_EQ(value, LV_DISPLAY_ROTATION_0);
 
   value = util_system_getRotationEnum(90);
-  EXPECT_EQ(value, LV_DISP_ROT_90);
+  EXPECT_EQ(value, LV_DISPLAY_ROTATION_90);
 
   value = util_system_getRotationEnum(180);
-  EXPECT_EQ(value, LV_DISP_ROT_180);
+  EXPECT_EQ(value, LV_DISPLAY_ROTATION_180);
 
   value = util_system_getRotationEnum(270);
-  EXPECT_EQ(value, LV_DISP_ROT_270);
+  EXPECT_EQ(value, LV_DISPLAY_ROTATION_270);
 }
 
 TEST(UtilSystemDeathTest, test_util_system_GetRotationEnum_invalid) {

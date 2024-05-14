@@ -49,20 +49,20 @@ struct EnvSettings util_system_getEnvSettings(void)
  *
  * @return angle as lv_disp_rot_t enum
  */
-lv_disp_rot_t util_system_getRotationEnum(const unsigned int Angle)
+lv_display_rotation_t util_system_getRotationEnum(const unsigned int Angle)
 {
 	switch (Angle) {
 	case 0:
-		return LV_DISP_ROT_NONE;
+		return LV_DISPLAY_ROTATION_0;
 
 	case 90:
-		return LV_DISP_ROT_90;
+		return LV_DISPLAY_ROTATION_90;
 
 	case 180:
-		return LV_DISP_ROT_180;
+		return LV_DISPLAY_ROTATION_180;
 
 	case 270:
-		return LV_DISP_ROT_270;
+		return LV_DISPLAY_ROTATION_270;
 
 	default:
 		LV_LOG_ERROR("Invalid screen rotation angle: %u.\n", Angle);
