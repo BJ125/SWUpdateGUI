@@ -13,8 +13,9 @@
 
 #include <lvgl/lvgl.h>
 
+
 bool rec_drv_openKeypadDevFd(const char *KeypadDev);
 
-void rec_drv_readKeypad(lv_indev_drv_t *IndevDrv, lv_indev_data_t *Data);
+void rec_drv_readKeypad(lv_indev_t *IndevDrv, lv_indev_data_t *Data);
 
 #endif /* REC_DRV_KEYPAD_H */

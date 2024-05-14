@@ -45,7 +45,7 @@ bool rec_drv_openKeypadDevFd(const char *KeypadDev)
  * @param[in] IndevDrv Driver object
  * @param[out] Data Event data
  */
-void rec_drv_readKeypad(lv_indev_drv_t *IndevDrv, lv_indev_data_t *Data)
+void rec_drv_readKeypad(lv_indev_t *IndevDrv, lv_indev_data_t *Data)
 {
 	(void)IndevDrv;
 	struct input_event Ev = { 0 };
