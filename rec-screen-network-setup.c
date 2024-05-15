@@ -871,18 +871,16 @@ static void rec_screen_network_EditArea_AddressPanel_createLabel(
 }
 
 static void
-rec_screen_network_EditArea_AddressPanel_onAllTextareaEvent(lv_event_t *E)
+rec_screen_network_EditArea_AddressPanel_onAllTextareaEvent(lv_event_t *event)
 {
-	struct NetworkScreen *NetworkSetting =
-		(struct NetworkScreen *)E->user_data;
-	lv_event_code_t Code = lv_event_get_code(E);
-	lv_obj_t *TextArea = E->target;
+	struct NetworkScreen *NetworkSetting = lv_event_get_user_data( event );
+	lv_event_code_t Code = lv_event_get_code(event);
+	lv_obj_t *TextArea = lv_event_get_current_target( event );
 
 	if (LV_EVENT_CLICKED == Code) {
 		lv_keyboard_set_textarea(
 			NetworkSetting->EditAreaPanel.VirtualKeyboard,
 			TextArea);
-		//rec_screen_network_setEditingNavigation(NetworkSetting);
 
 		lv_obj_set_style_bg_color(
 			NetworkSetting->EditAreaPanel.IpAddress.TextArea,
