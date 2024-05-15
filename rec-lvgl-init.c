@@ -17,27 +17,23 @@
 #include "rec-drv-keypad.h"
 
 #include <lvgl/lvgl.h>
-#include <lv_drivers/display/fbdev.h>
-#include <lv_drivers/indev/evdev.h>
 
 #include <unistd.h>
 #include <sys/time.h>
 
-/* A small buffer for LVGL to draw the screen's content */
-#define DISP_BUF_SIZE (128 * 1024)
-static lv_color_t gui_lvgl_DisplayBuf[DISP_BUF_SIZE];
 
-/* A descriptor for the buffer */
-static lv_disp_draw_buf_t gui_lvgl_DisplayBufFd;
+/* Two display buffers for double buffering. Since the display is using partial rendering, 2Mb should
+   be more then enough. */
+#define DISP_BUF_SIZE (4 * 512 * 1024)
+static lv_color_t gui_lvgl_DisplayBuf1[DISP_BUF_SIZE];
+static lv_color_t gui_lvgl_DisplayBuf2[DISP_BUF_SIZE];
 
-/* A display driver */
-static lv_disp_drv_t gui_lvgl_DispDrv;
-
-/* A driver for the inputs */
-static lv_indev_drv_t gui_lvgl_IndevDrv;
+/* A driver for the mouse */
+static lv_indev_t* gui_lvgl_MouseDrv = NULL;
 
 /* A driver for the keypad */
-static lv_indev_drv_t gui_lvgl_KeypadDrv;
+static lv_indev_t* gui_lvgl_KeypadDrv = NULL;
+
 
 /* Sleep in the endless loop, which process LVGL events */
 static const unsigned int LVGL_LOOP_SLEEP_US = 5000;
@@ -47,69 +43,50 @@ static void gui_lvgl_initializeDisplayDriver(void)
 	const struct RecoveryParameters *RecoveryParameters =
 		util_config_getRecoveryParameters();
 
-	fbdev_init();
+	lv_display_t* displayObj = lv_linux_fbdev_create();
+	lv_linux_fbdev_set_file( displayObj, "/dev/fb" );
 
-	/*Initialize a descriptor for the buffer*/
-	lv_disp_draw_buf_init(&gui_lvgl_DisplayBufFd, gui_lvgl_DisplayBuf, NULL,
-			      DISP_BUF_SIZE);
+	lv_display_set_default( displayObj );
 
-	/*Initialize and register a display driver*/
+	lv_display_set_buffers( displayObj, gui_lvgl_DisplayBuf1, gui_lvgl_DisplayBuf2, DISP_BUF_SIZE, LV_DISP_RENDER_MODE_PARTIAL );
 
-	lv_disp_drv_init(&gui_lvgl_DispDrv);
-	gui_lvgl_DispDrv.draw_buf = &gui_lvgl_DisplayBufFd;
-	gui_lvgl_DispDrv.flush_cb = fbdev_flush;
-	gui_lvgl_DispDrv.hor_res = RecoveryParameters->Env.ScreenWidth;
-	gui_lvgl_DispDrv.ver_res = RecoveryParameters->Env.ScreenHeight;
-	gui_lvgl_DispDrv.rotated = util_system_getRotationEnum(
-		RecoveryParameters->Env.ScreenOrientationAngle);
-	gui_lvgl_DispDrv.sw_rotate = 1;
-
-	lv_disp_drv_register(&gui_lvgl_DispDrv);
+	const lv_display_rotation_t displayRotation = util_system_getRotationEnum( RecoveryParameters->Env.ScreenOrientationAngle );
+	lv_display_set_rotation( displayObj, displayRotation );
 }
 
 static void gui_lvgl_initializeKeypadDriver(void)
 {
-	const struct RecoveryParameters *RecoveryParameters =
-		util_config_getRecoveryParameters();
+	gui_lvgl_KeypadDrv = lv_evdev_create( LV_INDEV_TYPE_KEYPAD, "/dev/input/keyboard0" );
 
-	const bool Success =
-		rec_drv_openKeypadDevFd(RecoveryParameters->Config.KeypadDev);
-
-	if (!Success) {
-		return;
-	}
-
-	lv_indev_drv_init(&gui_lvgl_KeypadDrv);
-	gui_lvgl_KeypadDrv.type = LV_INDEV_TYPE_KEYPAD;
-	gui_lvgl_KeypadDrv.read_cb = rec_drv_readKeypad;
-
-	lv_indev_t *KeypadIndev = lv_indev_drv_register(&gui_lvgl_KeypadDrv);
-	if (NULL == KeypadIndev) {
+	if ( NULL == gui_lvgl_KeypadDrv )
+	{
 		LV_LOG_ERROR(
 			"lv_indev_drv_register() failed for keypad. The device used: %s",
 			RecoveryParameters->Config.KeypadDev);
-	} else {
-		lv_indev_set_group(KeypadIndev, lv_group_get_default());
+	}
+	else
+	{
+		lv_indev_set_group( gui_lvgl_KeypadDrv, lv_group_get_default() );
 	}
 }
 
 static void gui_lvgl_initializeTouchscreenDriver(void)
 {
-	evdev_init();
+	gui_lvgl_MouseDrv = lv_evdev_create( LV_INDEV_TYPE_POINTER, "/dev/input/touchscreen0" );
 
-	lv_indev_drv_init(&gui_lvgl_IndevDrv);
-	gui_lvgl_IndevDrv.type = LV_INDEV_TYPE_POINTER;
-	gui_lvgl_IndevDrv.read_cb = evdev_read;
-	lv_indev_t *MouseIndev = lv_indev_drv_register(&gui_lvgl_IndevDrv);
-	if (NULL == MouseIndev) {
+	if ( NULL == gui_lvgl_MouseDrv )
+	{
 		LV_LOG_ERROR(
-			"lv_indev_drv_register() failed for touchscreen/mouse.");
-	} else {
+			"lv_evdev_create() failed for touchscreen/mouse at /dev/input/touchscreen0.");
+	}
+	else
+	{
 		/*Set a cursor for the mouse*/
 		LV_IMG_DECLARE(MouseCursorIcon)
 		lv_obj_t *CursorObj = lv_img_create(lv_scr_act());
 		lv_img_set_src(CursorObj, &MouseCursorIcon);
-		lv_indev_set_cursor(MouseIndev, CursorObj);
+		lv_indev_set_cursor(gui_lvgl_MouseDrv, CursorObj);
+
 	}
 }
 
