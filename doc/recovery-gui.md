@@ -2,9 +2,6 @@
 
 The recovery-gui utility provides a gui for swupdate.
 
-The source code is located in [this 
-repository](https://gitlab-ee.dev.ifm/vhip/linux/bin/ifm-recovery-gui)
-
 # Features
 
 It provides below screens:
@@ -14,18 +11,14 @@ It provides below screens:
 network-update.
 * Network setting screen to allow user to edit network settings.
 
-Beside the screens, there are some other features like dry-run option,
-status area and keypad-support. 
-
 The main screen looks like below:
 
 ![](./resources/rec-gui-main-screen.drawio.png)
 
 
-
 ## File browser
 
-File browser displays path of current directory. File browser supports 
+File browser displays path of the current directory. File browser supports
 browsing sub-directories too. The sub-directories are grouped at top and 
 alphabetically sorted. Below that files are shown and sorted 
 alphabetically. Only "*.swu" files are visible.
@@ -44,13 +37,16 @@ available to go back to parent directory.
 
 A checkbox for "DRY-RUN" mode is provided in file-browser screen. In this
 mode selected file is processed completely by SWUpdate except for flashing
-activity. This lets user test a file to know if it has any problems.
+activity. This option is to test whether the installation of a swu file
+is going to be successful or not.
 
 ## Update Progress
 
-Progress screen displays a progressbar for current update step. It shows 
-another progressbar to show percentage of current file being processed.
-Along with bars steps numbers like 1/4 etc and progress like 40% is shown.
+The update progress screen displays two progress bars
+
+ * one progress bar for the current update step.
+ * one progress bar to show percentage of current file being processed
+
 When update is complete, success/failure status is shown.
 For further debugging, user should refer to swupdate logs.
 
@@ -208,10 +204,8 @@ The recoverygui tool is dependent on below libraries and scripts.
 
 * [SWUpdate](https://swupdate.org/): SWUpdate backend daemon provides update
 functionality and libswupdate provides IPC functionality required for GUI.
-* [LVGL](https://lvgl.io/): LVGL UI toolkit configured appropriately
-for the product by modifying lv-conf.h & lv-drv-conf.h.
-* [lv_drivers](https://github.com/lvgl/lv_drivers): LVGL display and input
-drivers configured appropriately supporting touchpad and/or keypad devices.
+* [LVGL](https://lvgl.io/): the latest version of the LVGL UI toolkit configured
+appropriately for the product by modifying lv-conf.h
 * pthreads and realtime extensions(librt).
 * Scripts: recovery_gui needs below scripts to apply network settings.
 
