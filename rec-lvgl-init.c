@@ -19,14 +19,9 @@
 #include <lvgl/lvgl.h>
 
 #include <unistd.h>
+#include <stdlib.h>
 #include <sys/time.h>
 
-
-/* Two display buffers for double buffering. Since the display is using partial rendering, 2Mb should
-   be more then enough. */
-#define DISP_BUF_SIZE (4 * 512 * 1024)
-static lv_color_t gui_lvgl_DisplayBuf1[DISP_BUF_SIZE];
-static lv_color_t gui_lvgl_DisplayBuf2[DISP_BUF_SIZE];
 
 /* A driver for the mouse */
 static lv_indev_t* gui_lvgl_MouseDrv = NULL;
@@ -44,40 +39,51 @@ static void gui_lvgl_initializeDisplayDriver(void)
 		util_config_getRecoveryParameters();
 
 	lv_display_t* displayObj = lv_linux_fbdev_create();
+	if ( NULL == displayObj )
+	{
+		LV_LOG_ERROR( "lv_linux_fbdev_create() failed." );
+		exit( 1 );
+	}
+
 	lv_linux_fbdev_set_file( displayObj, "/dev/fb" );
-
 	lv_display_set_default( displayObj );
-
-	lv_display_set_buffers( displayObj, gui_lvgl_DisplayBuf1, gui_lvgl_DisplayBuf2, DISP_BUF_SIZE, LV_DISP_RENDER_MODE_PARTIAL );
 
 	const lv_display_rotation_t displayRotation = util_system_getRotationEnum( RecoveryParameters->Env.ScreenOrientationAngle );
 	lv_display_set_rotation( displayObj, displayRotation );
+
+	LV_LOG_INFO( "Display initialisation done." );
 }
 
 static void gui_lvgl_initializeKeypadDriver(void)
 {
-	gui_lvgl_KeypadDrv = lv_evdev_create( LV_INDEV_TYPE_KEYPAD, "/dev/input/keyboard0" );
+	const char* keyboardFile = "/dev/input/keyboard0";
+
+	gui_lvgl_KeypadDrv = lv_evdev_create( LV_INDEV_TYPE_KEYPAD, keyboardFile );
 
 	if ( NULL == gui_lvgl_KeypadDrv )
 	{
 		LV_LOG_ERROR(
-			"lv_indev_drv_register() failed for keypad. The device used: %s",
-			RecoveryParameters->Config.KeypadDev);
+			"lv_evdev_create() failed for keypad. The device used: %s",
+			keyboardFile);
 	}
 	else
 	{
 		lv_indev_set_group( gui_lvgl_KeypadDrv, lv_group_get_default() );
+
+		LV_LOG_INFO( "Keyboard initialized successfully using [%s].", keyboardFile );
 	}
 }
 
 static void gui_lvgl_initializeTouchscreenDriver(void)
 {
-	gui_lvgl_MouseDrv = lv_evdev_create( LV_INDEV_TYPE_POINTER, "/dev/input/touchscreen0" );
+	const char* touchscreenFile = "/dev/input/touchscreen0";
+
+	gui_lvgl_MouseDrv = lv_evdev_create( LV_INDEV_TYPE_POINTER, touchscreenFile );
 
 	if ( NULL == gui_lvgl_MouseDrv )
 	{
 		LV_LOG_ERROR(
-			"lv_evdev_create() failed for touchscreen/mouse at /dev/input/touchscreen0.");
+			"lv_evdev_create() failed for the touchscreen at [%s]", touchscreenFile );
 	}
 	else
 	{
@@ -87,6 +93,7 @@ static void gui_lvgl_initializeTouchscreenDriver(void)
 		lv_img_set_src(CursorObj, &MouseCursorIcon);
 		lv_indev_set_cursor(gui_lvgl_MouseDrv, CursorObj);
 
+		LV_LOG_INFO( "Touchscreen initialized successfully using [%s]", touchscreenFile );
 	}
 }
 
