@@ -127,7 +127,7 @@ static int create_export_log_file(char **filename)
 	/* the sufix is ".log", which is 4 characters long */
 	const int fd = mkstemps(*filename, 4);
 
-	LV_LOG_INFO("Exporting swupdate messages to %s.", filename);
+	LV_LOG_INFO("Exporting swupdate messages to %s.", *filename);
 
 	return fd;
 }
