@@ -24,7 +24,6 @@
 #include <unistd.h>
 #include <string.h>
 
-
 /*
  * Progress bar with a title
  */

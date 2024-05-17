@@ -22,7 +22,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 /* This structure is for the area that displays list of network interfaces and their configuration.
    This is a Nx4 table, where N is number of network interfaces. Each row shows one network
    interface name, ip address, netmask and the information whether it is configured as a DHCP
@@ -873,9 +872,9 @@ static void rec_screen_network_EditArea_AddressPanel_createLabel(
 static void
 rec_screen_network_EditArea_AddressPanel_onAllTextareaEvent(lv_event_t *event)
 {
-	struct NetworkScreen *NetworkSetting = lv_event_get_user_data( event );
+	struct NetworkScreen *NetworkSetting = lv_event_get_user_data(event);
 	lv_event_code_t Code = lv_event_get_code(event);
-	lv_obj_t *TextArea = lv_event_get_current_target( event );
+	lv_obj_t *TextArea = lv_event_get_current_target(event);
 
 	if (LV_EVENT_CLICKED == Code) {
 		lv_keyboard_set_textarea(
