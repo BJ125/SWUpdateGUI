@@ -20,24 +20,12 @@
  */
 struct EnvSettings util_system_getEnvSettings(void)
 {
-	struct EnvSettings EnvSettings = { .ScreenWidth = 800,
-					   .ScreenHeight = 480,
-					   .ScreenOrientationAngle = 0 };
+	struct EnvSettings EnvSettings = { .ScreenOrientationAngle = 0 };
 
 	const char *OrientationAngleString = getenv("SCREEN_ORIENTATION_ANGLE");
 	if (NULL != OrientationAngleString) {
 		EnvSettings.ScreenOrientationAngle =
 			atoi(OrientationAngleString);
-	}
-
-	const char *ScreenWidthString = getenv("SCREEN_WIDTH");
-	if (NULL != ScreenWidthString) {
-		EnvSettings.ScreenWidth = atoi(ScreenWidthString);
-	}
-
-	const char *ScreenHeightString = getenv("SCREEN_HEIGHT");
-	if (NULL != ScreenHeightString) {
-		EnvSettings.ScreenHeight = atoi(ScreenHeightString);
 	}
 
 	return EnvSettings;

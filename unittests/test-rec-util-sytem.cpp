@@ -22,57 +22,23 @@ using UtilSystemDeathTest = UtilSystemTest;
 
 TEST(UtilSystemTest, test_util_system_GetEnvSettings_valid_values) {
   setenv("SCREEN_ORIENTATION_ANGLE", "90", 1);
-  setenv("SCREEN_WIDTH", "1200", 1);
-  setenv("SCREEN_HEIGHT", "800", 1);
 
   struct EnvSettings envSettings = util_system_getEnvSettings();
   EXPECT_EQ(envSettings.ScreenOrientationAngle, 90);
-  EXPECT_EQ(envSettings.ScreenWidth, 1200);
-  EXPECT_EQ(envSettings.ScreenHeight, 800);
 }
 
 TEST(UtilSystemTest, test_util_system_GetEnvSettings_nothing_set_in_env) {
   unsetenv("SCREEN_ORIENTATION_ANGLE");
-  unsetenv("SCREEN_WIDTH");
-  unsetenv("SCREEN_HEIGHT");
 
   struct EnvSettings envSettings = util_system_getEnvSettings();
   EXPECT_EQ(envSettings.ScreenOrientationAngle, 0);
-  EXPECT_EQ(envSettings.ScreenWidth, 800);
-  EXPECT_EQ(envSettings.ScreenHeight, 480);
 }
 
 TEST(UtilSystemTest, test_util_system_GetEnvSettings_empty_values) {
   setenv("SCREEN_ORIENTATION_ANGLE", "", 1);
-  setenv("SCREEN_WIDTH", "", 1);
-  setenv("SCREEN_HEIGHT", "", 1);
 
   struct EnvSettings envSettings = util_system_getEnvSettings();
   EXPECT_EQ(envSettings.ScreenOrientationAngle, 0);
-  EXPECT_EQ(envSettings.ScreenWidth, 0);
-  EXPECT_EQ(envSettings.ScreenHeight, 0);
-}
-
-TEST(UtilSystemTest, test_util_system_GetEnvSettings_invalid_resolution) {
-  setenv("SCREEN_ORIENTATION_ANGLE", "180", 1);
-  setenv("SCREEN_WIDTH", "ABC", 1);
-  setenv("SCREEN_HEIGHT", "1200", 1);
-
-  struct EnvSettings envSettings = util_system_getEnvSettings();
-  EXPECT_EQ(envSettings.ScreenOrientationAngle, 180);
-  EXPECT_EQ(envSettings.ScreenWidth, 0);
-  EXPECT_EQ(envSettings.ScreenHeight, 1200);
-}
-
-TEST(UtilSystemTest, test_util_system_GetEnvSettings_0_in_resolution) {
-  setenv("SCREEN_ORIENTATION_ANGLE", "90", 1);
-  setenv("SCREEN_WIDTH", "900", 1);
-  setenv("SCREEN_HEIGHT", "0", 1);
-
-  struct EnvSettings envSettings = util_system_getEnvSettings();
-  EXPECT_EQ(envSettings.ScreenOrientationAngle, 90);
-  EXPECT_EQ(envSettings.ScreenWidth, 900);
-  EXPECT_EQ(envSettings.ScreenHeight, 0);
 }
 
 TEST(UtilSystemTest, test_util_system_GetRotationEnum_valid) {

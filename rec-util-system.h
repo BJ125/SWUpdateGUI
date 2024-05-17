@@ -18,8 +18,6 @@ extern "C" {
 #include <lvgl/lvgl.h>
 
 struct EnvSettings {
-	unsigned int ScreenWidth;
-	unsigned int ScreenHeight;
 	unsigned int ScreenOrientationAngle;
 };
 
